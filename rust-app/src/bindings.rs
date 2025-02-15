@@ -33,8 +33,13 @@ pub struct Person {
 impl Person {
     pub fn fmt(&self) -> Result<String, ()> {
         unsafe {
-            let c_str = CStr::from_ptr(person_fmt(self.c_person));
-            Ok(c_str.to_str().map_err(|_| ())?.to_string())
+            let char_ptr = person_fmt(self.c_person);
+            let c_str = CStr::from_ptr(char_ptr);
+            let result = c_str.to_str().map_err(|_| ()).map(ToString::to_string);
+
+            libc::free(char_ptr as *mut libc::c_void);
+
+            result
         }
     }
 }
