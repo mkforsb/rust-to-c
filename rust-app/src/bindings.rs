@@ -43,6 +43,18 @@ impl Person {
             result
         }
     }
+
+    pub fn get_age(&self) -> u32 {
+        unsafe {
+            (*self.c_person).age
+        }
+    }
+
+    pub fn set_age(&mut self, age: u32) {
+        unsafe {
+            (*(self.c_person as *mut person_t)).age = age;
+        }
+    }
 }
 
 impl Drop for Person {
