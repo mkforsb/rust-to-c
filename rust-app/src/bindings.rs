@@ -1,4 +1,3 @@
-
 use std::ffi::{CStr, CString};
 
 /// typedef struct {
@@ -12,11 +11,14 @@ struct person_t {
     age: cty::uint32_t,
 }
 
-
 #[link(name = "library", kind = "static")]
 extern "C" {
     /// person_t* person_new(char* name, uint32_t name_len, uint32_t age);
-    fn person_new(name: *const cty::c_char, name_len: cty::uint32_t, age: cty::uint32_t) -> *const person_t;
+    fn person_new(
+        name: *const cty::c_char,
+        name_len: cty::uint32_t,
+        age: cty::uint32_t,
+    ) -> *const person_t;
 
     /// void person_free(person_t* person);
     fn person_free(person: *const person_t);
@@ -24,7 +26,6 @@ extern "C" {
     /// char* person_fmt(person_t* person);
     fn person_fmt(person: *const person_t) -> *const cty::c_char;
 }
-
 
 pub struct Person {
     c_person: *const person_t,
@@ -51,7 +52,6 @@ impl Drop for Person {
         }
     }
 }
-
 
 impl Person {
     pub fn new(name: String, age: u32) -> Self {
